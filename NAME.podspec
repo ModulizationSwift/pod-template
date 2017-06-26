@@ -21,17 +21,39 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/${USER_NAME}/${POD_NAME}'
+  s.homepage         = 'https://github.com/${ModulizationSwift}/${POD_NAME}'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '${USER_NAME}' => '${USER_EMAIL}' }
-  s.source           = { :git => 'https://github.com/${USER_NAME}/${POD_NAME}.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/${ModulizationSwift}/${POD_NAME}.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = '${POD_NAME}/Classes/**/*'
-  
+  # s.source_files = '${POD_NAME}/Classes/**/*'
+
+   $lib = ENV['use_lib']
+   $lib_name = ENV["#{s.name}_use_lib"]
+   if $lib || $lib_name
+      puts '---------binary-------'
+      s.source_files = "#{s.name}/Classes/**/*"
+      s.ios.vendored_framework = "Framework/#{s.version}/#{s.name}.framework"
+     #  这种是帮你打包成bundle
+     #  s.resource_bundles = {
+     #    "#{s.name}" => ["#{s.name}/Assets/*.{png,xib,plist}"]
+     #  }
+     #  这种是你已经打包好了bundle，推荐这种，可以省去每次pod帮你生成bundle的时间
+      s.resources = "#{s.name}/Assets/*.bundle"
+   else
+      puts '.......source........'
+      s.source_files = "#{s.name}/Classes/**/*"
+     #  s.resources = "#{s.name}/Assets/*.bundle"
+     #  s.public_header_files = "#{s.name}/Classes/**/*.h"
+   end
+
+
+   s.preserve_paths = "#{s.name}/Classes/**/*","#{s.name}/Assets/*.{png,xib,plist}","Framework/#{s.version}/#{s.name}.framework"
+
   # s.resource_bundles = {
   #   '${POD_NAME}' => ['${POD_NAME}/Assets/*.png']
   # }
